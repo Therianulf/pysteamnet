@@ -4,10 +4,9 @@ A faithful, pure-`ctypes` Python mapping of the Steamworks SDK's **flat C
 API**. No compiled shim, no C++, no build step, zero runtime
 dependencies: Python talks directly to Valve's own shipped binary
 (`steam_api64.dll` / `libsteam_api.so` / `libsteam_api.dylib`) through
-`ctypes` from the standard library. It exists because Python has no
-cared-for Steamworks binding — the existing ones route through a
-hand-maintained compiled C++ shim, and that layer rots. Talking straight
-to the flat C API removes the layer that rots.
+`ctypes` from the standard library. By talking straight to the flat C
+API in Valve's own shipped binary, there is no intermediate layer to
+maintain at all.
 
 > **Naming note.** The import name is `pysteamnet` (one word). It is
 > distinct from the unrelated Rust-based `py_steam_net` project; the
