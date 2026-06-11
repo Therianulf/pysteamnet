@@ -1,0 +1,25 @@
+# Valve's Steamworks binaries are NEVER committed to this repository.
+# Download the SDK from https://partner.steamgames.com/doc/sdk and see
+# README.md for where to place the library.
+*.dylib
+*.so
+*.so.*
+*.dll
+*.lib
+libsteam_api.*
+steam_api*.dll
+sdk/
+
+# steam_appid.txt is a dev-only convenience (AppID 480 for Spacewar).
+# Shipped builds launch through Steam and must not carry this file.
+steam_appid.txt
+
+# Python build/runtime artifacts.
+__pycache__/
+*.pyc
+*.egg-info/
+build/
+dist/
+.pytest_cache/
+.venv/
+venv/

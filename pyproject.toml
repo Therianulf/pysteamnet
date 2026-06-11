@@ -1,0 +1,35 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pysteamnet"
+version = "0.1.0.dev0"
+description = "A faithful, pure-ctypes Python mapping of the Steamworks SDK flat C API. Zero runtime dependencies, forever."
+readme = "README.md"
+requires-python = ">=3.11"
+# License intentionally TBD -- Ben decides before any public release.
+# Runtime dependencies stay EMPTY forever: ctypes is in the standard
+# library, and the whole point of this project is that there is nothing
+# to build and nothing to install beyond Valve's own shipped binary.
+dependencies = []
+
+[project.optional-dependencies]
+# Dev tooling is unrestricted (the zero-dep law is about the runtime
+# surface, not developer machines).
+dev = ["pytest"]
+
+# Lets static analyzers resolve the src/ layout without installing.
+# (Editable installs use an import hook some analyzers can't follow.)
+# Note: pysteamnet re-exports much of its surface dynamically (the flat
+# k_* constant aliases, the star-imported flat functions); those names
+# exist at runtime even where a static analyzer can't see them.
+[tool.pyright]
+extraPaths = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "sdk: requires the Steamworks SDK on disk (set PYSTEAMNET_SDK to the unpacked sdk root)",
+    "steam: requires a running, logged-in Steam client and a steam_appid.txt containing 480",
+]
