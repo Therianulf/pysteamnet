@@ -33,8 +33,9 @@ Python**. That single idea decides every design question:
 - **Bind only the slice we need, growing as needed.** Not the whole SDK.
   Initial surface: init/shutdown, the manual-dispatch callback pump,
   `ISteamMatchmaking` (lobbies/invites), `ISteamNetworkingMessages`
-  (transport), minimal `ISteamFriends` (persona name, rich presence) and
-  `ISteamUtils`. Explicitly out until needed: achievements, stats, cloud,
+  (transport), minimal `ISteamFriends` (persona name, rich presence),
+  `ISteamUser` (own SteamID, logged-on check) and `ISteamUtils`.
+  Explicitly out until needed: achievements, stats, cloud,
   workshop, input, everything else.
 
 Why this exists (ecosystem survey, verified 2026-06-10): Python has no
@@ -59,8 +60,9 @@ BjornsGame/.claude/memory/)
   `argtypes`/`restype`; a generator over the JSON is a later option.
 - **Manual dispatch is the callback mechanism** (SDK ≥ 1.48, built by
   Valve expressly for non-C++ binding layers). The pump must follow spec
-  EXACTLY — this is the known hard 20%, unproven in published Python code
-  (proven in Rust/C#/Lua):
+  EXACTLY — this was the known hard 20%, unproven in published Python
+  code when this repo started (proven in Rust/C#/Lua; ours is now
+  live-verified — see the pinned block below):
   1. `SteamAPI_ManualDispatch_Init()` once, around init.
   2. Per frame: `SteamAPI_ManualDispatch_RunFrame(pipe)`, then loop
      `SteamAPI_ManualDispatch_GetNextCallback(pipe, &msg)` → handle →
@@ -121,7 +123,7 @@ block (and re-run the layout tests) before bumping the SDK.
   SteamAPICallCompleted_t is 703 and is consumed by the pump itself.
 - **Packing (the silent-corruption hazard):** ordinary callback structs
   are `pack(4)` on macOS/Linux/FreeBSD and `pack(8)` on Windows
-  (steamclientpublic.h:1143). EXCEPTIONS, same on all platforms:
+  (steamclientpublic.h:1143-1160). EXCEPTIONS, same on all platforms:
   `SteamNetworkingIdentity` (136 B) and the two NetworkingMessages
   session callbacks are `pack(1)`; `SteamNetworkingMessage_t` is
   natural-aligned; `SteamNetConnectionInfo_t` (696 B) is defined under
@@ -148,6 +150,10 @@ block (and re-run the layout tests) before bumping the SDK.
   lobby, data round-trip, chat echo, leave). Still pending Ben's
   two-account/two-machine acceptance: lobby invite/join across machines
   (M2) and `messages_pingpong.py` (M3).
+- **Module map:** the "What lives where" table in
+  `src/pysteamnet/__init__.py`'s docstring is the canonical layout
+  (`_loader` / `_bindings` / `_dispatch` / `_structs` / `_constants` /
+  `_guards`).
 - **Open for Ben:** license choice (pyproject placeholder says TBD);
   whether to ever generate declarations from `steam_api.json` (tests
   already cross-check against it).
@@ -159,8 +165,13 @@ Valve's test app **Spacewar, AppID 480**, is usable by anyone:
 1. Steam client installed, running, and logged in.
 2. A `steam_appid.txt` containing `480` next to the test script (dev
    only — shipped builds launch through Steam instead).
-3. `SteamAPI_Init` succeeds → first smoke test is printing your own
+3. `SteamAPI_InitFlat` succeeds → first smoke test is printing your own
    persona name via `ISteamFriends.GetPersonaName`.
+
+In this repo: `tests/` holds all three tiers (pure, `sdk`-marked JSON
+cross-checks, `steam`-marked live tests) and `examples/` holds the
+runnable demos — commands and walkthroughs in `README.md` and
+`examples/README.md`.
 
 Integration tests require a running Steam client and are marked as such;
 pure-Python tests (struct layouts/sizes, signature declarations, pump
@@ -170,8 +181,8 @@ logic against a fake) must run without Steam.
 
 - **M0 — hello steam:** repo scaffold (pyproject, stdlib-only), SDK
   download documented, library located + loaded via `ctypes.CDLL`, init
-  against AppID 480, persona name printed. Record the pinned SDK version
-  here.
+  against AppID 480, persona name printed. Pinned SDK version recorded
+  above (v1.64).
 - **M1 — the pump:** manual-dispatch loop + a small registry mapping
   callback IDs → ctypes structs for just the callbacks we need. This is
   the hard milestone; budget care, write layout-assertion tests.
