@@ -1,4 +1,4 @@
-# pySteamNet
+# pysteamnet
 
 A pure-Python binding to the Steamworks SDK's **flat C API**, built with
 `ctypes` and nothing else. No compiled shim, no C++, no build step:
@@ -191,12 +191,14 @@ logic against a fake) must run without Steam.
 - **M3 — messages:** `ISteamNetworkingMessages` send/receive between two
   machines (this is the transport Bjorn's World's adapter will sit on).
 - **M4 — consumption:** pip-installable (`pip install -e
-  ../pySteamNet` from the game repo); Bjorn's World plugs it in behind
+  ../pysteamnet` from the game repo); Bjorn's World plugs it in behind
   its transport seam. Adding it to the game is Ben's dependency call.
 
 ## Working agreement
 
 - Never run git commands; Ben commits.
+- Project memory (session-to-session context for Claude) lives in this
+  repo at `.claude/memory/` and is committed with the code.
 - Zero runtime dependencies — `ctypes` and the standard library, period.
 - Comment clearly in plain language (the sibling game repo is a teaching
   artifact for a kid who will grow up reading this code family; this repo
