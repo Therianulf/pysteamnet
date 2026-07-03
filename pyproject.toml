@@ -8,7 +8,9 @@ version = "0.1.0.dev0"
 description = "A faithful, pure-ctypes Python mapping of the Steamworks SDK flat C API. Zero runtime dependencies, forever."
 readme = "README.md"
 requires-python = ">=3.11"
-# License intentionally TBD -- Ben decides before any public release.
+# License: MIT -- see the LICENSE file at the repo root. Deliberately kept
+# out of the structured [project] metadata so we don't have to bump the
+# setuptools build pin (PEP 639's SPDX `license` field needs setuptools>=77).
 # Runtime dependencies stay EMPTY forever: ctypes is in the standard
 # library, and the whole point of this project is that there is nothing
 # to build and nothing to install beyond Valve's own shipped binary.

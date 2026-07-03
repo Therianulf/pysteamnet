@@ -154,9 +154,11 @@ block (and re-run the layout tests) before bumping the SDK.
   `src/pysteamnet/__init__.py`'s docstring is the canonical layout
   (`_loader` / `_bindings` / `_dispatch` / `_structs` / `_constants` /
   `_guards`).
-- **Open for Ben:** license choice (pyproject placeholder says TBD);
-  whether to ever generate declarations from `steam_api.json` (tests
-  already cross-check against it).
+- **License:** MIT (`LICENSE` at repo root; intentionally NOT mirrored
+  into pyproject metadata, to keep the setuptools build pin at >=68).
+  Decided by Ben 2026-06-24.
+- **Open for Ben:** whether to ever generate declarations from
+  `steam_api.json` (tests already cross-check against it).
 
 ## The development loop (no partner account needed)
 

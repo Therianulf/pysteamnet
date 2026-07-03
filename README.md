@@ -295,4 +295,4 @@ API, faithfully, and that is all it ever intends to be.
 
 ## License
 
-To be determined before any public release.
+MIT — see [`LICENSE`](LICENSE).

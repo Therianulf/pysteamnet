@@ -16,8 +16,9 @@ when Bjorn's World reaches its Steam tier / M4). State at shelving:
 - Remaining work, all Ben-gated: (1) two-machine acceptance —
   lobby_host/lobby_join across machines, then `messages_pingpong.py
   listen` / `connect <id>` (PASS line = green light for the game's
-  transport adapter); (2) license choice (pyproject says TBD);
-  (3) first commit.
+  transport adapter); (2) first commit. License RESOLVED 2026-06-24:
+  MIT (LICENSE file at repo root; deliberately not declared in pyproject
+  metadata, to keep the setuptools build pin at >=68).
 - Dev env facts: SDK v1.64 at ~/Downloads/sdk; run tests/examples with
   `PYSTEAMNET_LIBSTEAM_API=~/Downloads/sdk/redistributable_bin/osx` and
   a `steam_appid.txt` containing 480 (gitignored — recreate after clone).
